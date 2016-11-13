@@ -1,6 +1,6 @@
 # DITA-OT EditLink plugin
 
-DITA-OT plugin which adds an "edit" link to each topic title. This links opens the web author to edit the source of the corresponding topic.
+DITA-OT plugin which adds an "edit" link to each topic title. This links opens oXygen XML Web Author to edit the source of the corresponding topic.
 
 To use the plugin, set the following Ant properties:
 
