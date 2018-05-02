@@ -41,12 +41,12 @@
     <xsl:copy>
       <xsl:apply-templates select="@*" mode="#current"/>
       <xsl:attribute name="style">display:table; width:100%;</xsl:attribute>
-      <div class="edit-link-container" style="display: table-cell; margin-top: 0;">
+      <div class="edit-link-container">
         <xsl:apply-templates select="node()" mode="#current"/>  
       </div>
       
       <!-- The edit link -->
-      <span class="edit-link" style="font-size: 12px; opacity: 0.6; display: table-cell; text-align: right; vertical-align: middle">
+      <span class="edit-link">
         <xsl:choose>
           <xsl:when test="$editlink.present.only.path.to.topic = 'true'">
             <xsl:value-of select="editlink:makeRelative(editlink:toUrl($editlink.local.ditamap.path), $xtrf)"/>
@@ -59,6 +59,19 @@
           </xsl:otherwise>
         </xsl:choose>
       </span>
+      <style type="text/css">
+        .edit-link {
+          display: table-cell;
+          font-size: 12px;
+          opacity: 0.6;
+          text-align: right;
+          vertical-align: "middle"
+        }
+        .edit-link-container {
+          display: table-cell;
+          margin-top: 0
+        }
+      </style>
       <!-- Done with the edit link -->
     </xsl:copy>
   </xsl:template>

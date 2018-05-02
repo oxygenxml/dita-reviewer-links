@@ -18,7 +18,7 @@
       
         <!-- Use a default value for the Web Author deployment.-->
         <xsl:variable name="web.author.url.nonull">
-          <xsl:value-of select="if ($web.author.url != '') then $web.author.url else 'https://www.oxygenxml.com/webapp-demo-aws/'"/>
+          <xsl:value-of select="if ($web.author.url != '') then $web.author.url else 'https://www.oxygenxml.com/oxygen-xml-web-author/'"/>
         </xsl:variable>
 
         <xsl:variable name="ditamap.url.encoded">
