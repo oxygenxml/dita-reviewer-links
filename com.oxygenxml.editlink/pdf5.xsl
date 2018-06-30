@@ -20,7 +20,7 @@
            Note: the root element is `dita-merge` and its child is our map. 
           -->
         <xsl:variable name="editlink.local.ditamap.path">
-            <xsl:value-of select="/*/map/@xtrf"/>
+            <xsl:value-of select="/*/*[contains(@class, ' map/map ')][1]/@xtrf"/>
         </xsl:variable>
         <fo:inline>
             <xsl:value-of select="$content"/>
