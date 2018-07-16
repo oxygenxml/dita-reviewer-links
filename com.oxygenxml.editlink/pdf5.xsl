@@ -8,10 +8,11 @@
     xmlns:fo="http://www.w3.org/1999/XSL/Format" 
     exclude-result-prefixes="xs" version="2.0">
     <xsl:import href="link.xsl"/>
-    <xsl:variable name="editlink.remote.ditamap.url" select="system-property('editlink.remote.ditamap.url')"/>
-    <xsl:variable name="editlink.web.author.url" select="system-property('editlink.web.author.url')"/>
+
+    <xsl:param name="editlink.remote.ditamap.url" select="system-property('editlink.remote.ditamap.url')"/>
+    <xsl:param name="editlink.web.author.url" select="system-property('editlink.web.author.url')"/>
+
     <xsl:template match="*[contains(@class, ' topic/topic ')]/*[contains(@class, ' topic/title ')]">
-        
         <xsl:variable name="content">
             <xsl:next-match/>
         </xsl:variable>
