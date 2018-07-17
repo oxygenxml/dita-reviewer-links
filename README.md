@@ -25,12 +25,14 @@ For what audience would this plugin be useful?
 To embed an Edit link DITA PDF5 output, obtained using the PDF5-ML plugin, follow this procedure:
 
 1. Add the following import `<xsl:include href="../../com.oxygenxml.editlink/pdf5.xsl"/>` in the `com.antennahouse.pdf5.ml/customization/dita2fo_custom.xsl` file of the PDF5 plugin.
-2. Pass the following system properties to the DITA-OT transformation: 
+1. In the `com.oxygenxml.editlink/plugin.xml` file, uncomment the lines that configure the parameters for the PDF5 plugin: 
+
+```
+<feature extension="com.antennahouse.pdf5.ml.param" value="params.xml" type="file"/>
+<feature extension="com.antennahouse.pdf5.ml.saxon.param" value="params.xml" type="file"/>
+<feature extension="com.antennahouse.pdf5.ml.psmi.param" value="params.xml" type="file">
+```
+1. In Oxygen XML Editor/Author, edit a DITA Map PDF5 transformation scenario and open the Parameters tab. 
+1. Set values for the following parameters: 
  - editlink.remote.ditamap.url - The custom OXY-URL of the DITA Map suitable for opening in Web Author.
- - editlink.web.author.url - The URL of the Web Author installation, for example: https://www.oxygenxml.com/oxygen-xml-web-author/. 
- 
- To set a system property, follow one of the procedures below. 
-  - If you are running the transformation from Oxygen: 
-    - Edit your PDF5 transformation scenario and open the Advanced Tab
-    - Add the following parameters to the JVM Arguments in the following format: `-Deditlink.remote.ditamap.url=[DITAMAP-OXY-URL] -Deditlink.web.author.url=[WEB-AUTHOR-URL]`. 
-  - If you are running the transformation from command line, append the parameters to the `ANT_OPTS` environment variable in the following format: `-Deditlink.remote.ditamap.url=[DITAMAP-OXY-URL] -Deditlink.web.author.url=[WEB-AUTHOR-URL]`
+ - editlink.web.author.url - The URL of the Web Author installation (for example: https://www.oxygenxml.com/oxygen-xml-web-author/).

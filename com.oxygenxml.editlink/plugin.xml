@@ -38,4 +38,22 @@
       <val default="true">false</val>
     </param>
   </transtype>
+  
+  <!-- PDF-CSS -->
+  <feature extension="com.oxygenxml.pdf.css.xsl.merged2merged" value="pdf-css.xsl" type="file"/>
+  <feature extension="com.oxygenxml.pdf.css.xsl.merged2merged.parameters" value="params.xml" type="file"/>
+  <feature extension="com.oxygenxml.pdf.css.init" file="pdf-css-init.xml"/>
+  <transtype name="pdf-css-base" desc="PDF (CSS Formatter)" abstract="true">
+    <param name="editlink.remote.ditamap.url" desc="The custom URL of the DITA Map suitable for opening in oXygen XML Web Author" type="string"/>
+    <param name="editlink.web.author.url" desc="The URL of the Web Author installation" type="string">
+      <val desc="oXygen XML Web Author Demo" default="true">https://www.oxygenxml.com/oxygen-xml-web-author/</val>
+    </param>
+  </transtype>
+  
+  <!--PDF5-ml -->
+  <!-- Uncomment these lines to make the plugin work with the PDF5 plugin.
+  <feature extension="com.antennahouse.pdf5.ml.param" value="params.xml" type="file"/>
+  <feature extension="com.antennahouse.pdf5.ml.saxon.param" value="params.xml" type="file"/>
+  <feature extension="com.antennahouse.pdf5.ml.psmi.param" value="params.xml" type="file"/>
+  -->
 </plugin>
