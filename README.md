@@ -36,3 +36,9 @@ To embed an Edit link DITA PDF5 output, obtained using the PDF5-ML plugin, follo
 1. Set values for the following parameters: 
  - editlink.remote.ditamap.url - The custom OXY-URL of the DITA Map suitable for opening in Web Author.
  - editlink.web.author.url - The URL of the Web Author installation (for example: https://www.oxygenxml.com/oxygen-xml-web-author/).
+
+Copyright and License
+---------------------
+Copyright 2018 Syncro Soft SRL.
+
+This project is licensed under [Apache License 2.0](https://github.com/oxygenxml/dita-reviewer-links/blob/master/LICENSE)
