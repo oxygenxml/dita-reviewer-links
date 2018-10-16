@@ -40,6 +40,7 @@
   </transtype>
   
   <!-- PDF-CSS -->
+  <!-- Uncomment these lines to make the plugin work with the PDF5 plugin.
   <feature extension="com.oxygenxml.pdf.css.xsl.merged2merged" value="pdf-css.xsl" type="file"/>
   <feature extension="com.oxygenxml.pdf.css.xsl.merged2merged.parameters" value="params.xml" type="file"/>
   <feature extension="com.oxygenxml.pdf.css.init" file="pdf-css-init.xml"/>
@@ -49,6 +50,7 @@
       <val desc="oXygen XML Web Author Demo" default="true">https://www.oxygenxml.com/oxygen-xml-web-author/</val>
     </param>
   </transtype>
+  -->
   
   <!--PDF5-ml -->
   <!-- Uncomment these lines to make the plugin work with the PDF5 plugin.
