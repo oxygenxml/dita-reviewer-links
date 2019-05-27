@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description 
+    xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:editlink="http://oxygenxml.com/xslt/editlink/"
+    stylesheet="link.xsl"> 
+
+    <x:scenario label="Perforce URL resolution">
+        <x:call function="editlink:resolve-uri">
+            <x:param name="relative" position="1" select="'topics/topics.dita'" />
+            <x:param name="base" position="2" select="'p4java://p4master.hh.imgtec.org:1666//techpubs/MAIN/DITA/bm_test.ditamap'" />
+        </x:call>
+        <x:expect label="Topic URL should have this value" 
+            select="'p4java://p4master.hh.imgtec.org:1666//techpubs/MAIN/DITA/topics/topics.dita'"/>
+    </x:scenario>
+
+</x:description>

@@ -32,7 +32,7 @@
             <xsl:value-of select="editlink:makeRelative(editlink:toUrl($local.ditamap.path), $local.topic.file.url)"/>
         </xsl:variable>
         <xsl:variable name="file.url.encoded">
-            <xsl:value-of select="encode-for-uri(resolve-uri($file.rel.path, $remote.ditamap.url))"/>
+            <xsl:value-of select="encode-for-uri(editlink:resolve-uri($file.rel.path, $remote.ditamap.url))"/>
         </xsl:variable>
         <xsl:variable name="ditaval.query.param">
             <xsl:if test="$local.ditaval.path != ''">
@@ -40,13 +40,29 @@
                     <xsl:value-of select="editlink:makeRelative(editlink:toUrl($local.ditamap.path), editlink:toUrl($local.ditaval.path))"/>
                 </xsl:variable>
                 <xsl:variable name="ditaval.url.encoded">
-                    <xsl:value-of select="encode-for-uri(resolve-uri($ditaval.rel.path, $remote.ditamap.url))"/>
+                    <xsl:value-of select="encode-for-uri(editlink:resolve-uri($ditaval.rel.path, $remote.ditamap.url))"/>
                 </xsl:variable>
                 <xsl:value-of select="concat('&amp;dita.val.url=', $ditaval.url.encoded)"/>
             </xsl:if>
         </xsl:variable>
         
         <xsl:value-of select="concat($web.author.url.nonull, 'app/oxygen.html?url=', $file.url.encoded, '&amp;ditamap=', $ditamap.url.encoded, $ditaval.query.param)"/>
+    </xsl:function>
+    
+    <!-- Resolve an URI taking care of an issue with the Perforce URLs. -->
+    <xsl:function name="editlink:resolve-uri" as="xs:string">
+        <xsl:param name="relative"/>
+        <xsl:param name="base"/>
+        
+        <xsl:variable name="resolved" select="resolve-uri($relative, $base)"/>
+        <xsl:choose>
+            <xsl:when test="starts-with($base, 'p4java://')">
+                <xsl:value-of select="replace($resolved, '(p4java://[^/]+)/([^/])', '$1//$2')"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$resolved"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:function>
     
     <!-- Makes the topic URL relative to the map URL. -->
