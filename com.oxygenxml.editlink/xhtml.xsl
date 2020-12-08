@@ -12,12 +12,16 @@
   <xsl:param name="editlink.present.only.path.to.topic"/>
   <xsl:param name="editlink.local.ditamap.path"/>
   <xsl:param name="editlink.local.ditaval.path"/>
+  <xsl:param name="editlink.ditamap.edit.url"/>
+  <xsl:param name="editlink.additional.query.parameters"/>
   
   <!-- Override the topic/title processing to add 'Edit Link' action. -->  
   <xsl:template match="*[contains(@class, ' topic/topic ')]/*[contains(@class, ' topic/title ')]">
     <xsl:choose>
-      <xsl:when test="string-length($editlink.remote.ditamap.url) > 0 
-        or $editlink.present.only.path.to.topic = 'true'">
+      <xsl:when test="@xtrf
+        and (string-length($editlink.remote.ditamap.url) > 0
+          or string-length($editlink.ditamap.edit.url) > 0
+          or $editlink.present.only.path.to.topic = 'true')">
         <!-- Get the default output in a temporary variable -->
         <xsl:variable name="topicTitleFragment">
           <xsl:next-match/>
@@ -37,42 +41,27 @@
   
   <!-- Add a span element associated with the 'Edit Link' action -->
   <xsl:template match="*[starts-with(local-name(), 'h')]" mode="add-edit-link" priority="5">
-    <xsl:param name="xtrf" tunnel="yes"/>
+   <xsl:param name="xtrf" tunnel="yes"/>
+    
+    <!-- The edit link -->
+    <span class="edit-link">
+      <xsl:attribute name="style">font-size:12px; opacity:0.6; text-align:right; vertical-align:middle</xsl:attribute>
+      <xsl:choose>
+        <xsl:when test="$editlink.present.only.path.to.topic = 'true'">
+          <xsl:value-of select="editlink:makeRelative(editlink:toUrl($editlink.local.ditamap.path), $xtrf)"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <a target="_blank">
+            <xsl:attribute name="href">
+              <xsl:value-of select="editlink:compute($editlink.remote.ditamap.url, $editlink.local.ditamap.path, $xtrf, $editlink.web.author.url, $editlink.local.ditaval.path, $editlink.ditamap.edit.url, $editlink.additional.query.parameters)"/>
+            </xsl:attribute>Edit online</a>
+        </xsl:otherwise>
+      </xsl:choose>
+    </span>
+    <!-- Done with the edit link -->
+    
     <xsl:copy>
-      <xsl:apply-templates select="@*" mode="#current"/>
-      <xsl:attribute name="style">display:table; width:100%;</xsl:attribute>
-      <div class="edit-link-container">
-        <xsl:apply-templates select="node()" mode="#current"/>  
-      </div>
-      
-      <!-- The edit link -->
-      <span class="edit-link">
-        <xsl:choose>
-          <xsl:when test="$editlink.present.only.path.to.topic = 'true'">
-            <xsl:value-of select="editlink:makeRelative(editlink:toUrl($editlink.local.ditamap.path), $xtrf)"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <a target="_blank">
-              <xsl:attribute name="href">
-                <xsl:value-of select="editlink:compute($editlink.remote.ditamap.url, $editlink.local.ditamap.path, $xtrf, $editlink.web.author.url, $editlink.local.ditaval.path)"/>
-              </xsl:attribute>Edit online</a>
-          </xsl:otherwise>
-        </xsl:choose>
-      </span>
-      <style type="text/css">
-        .edit-link {
-          display: table-cell;
-          font-size: 12px;
-          opacity: 0.6;
-          text-align: right;
-          vertical-align: "middle"
-        }
-        .edit-link-container {
-          display: table-cell;
-          margin-top: 0
-        }
-      </style>
-      <!-- Done with the edit link -->
+      <xsl:apply-templates select="@*|node()" mode="#current"/>
     </xsl:copy>
   </xsl:template>
 

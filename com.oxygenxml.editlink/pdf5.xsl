@@ -13,6 +13,8 @@
     <xsl:param name="editlink.web.author.url"/>
     <xsl:param name="editlink.local.ditamap.path"/>
     <xsl:param name="editlink.local.ditaval.path"/>
+    <xsl:param name="editlink.ditamap.edit.url"/>
+    <xsl:param name="editlink.additional.query.parameters"/>
 
     <xsl:template match="*[contains(@class, ' topic/topic ')]/*[contains(@class, ' topic/title ')]">
         
@@ -22,7 +24,7 @@
         
         <fo:inline>
             <xsl:value-of select="$content"/>
-            <fo:basic-link text-align="right" white-space="nowrap" text-decoration="underline" color="navy" font-size="8pt" font-weight="normal" width="80pt" font-style="normal">
+            <fo:basic-link xsl:use-attribute-sets="fo-link-attrs">
                 <xsl:attribute name="external-destination">
                     <xsl:value-of 
                         select="editlink:compute(
@@ -30,7 +32,9 @@
                             $editlink.local.ditamap.path, 
                             @xtrf, 
                             $editlink.web.author.url, 
-                            '')"/>
+                            '',
+                            $editlink.ditamap.edit.url,
+                            $editlink.additional.query.parameters)"/>
                 </xsl:attribute>
                 Edit online
             </fo:basic-link>

@@ -1,113 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:fo="http://www.w3.org/1999/XSL/Format"
-    xmlns:editlink="http://oxygenxml.com/xslt/editlink/"
-    exclude-result-prefixes="xs editlink"
-    version="2.0">
-
-    <xsl:import href="link.xsl"/>
-
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fo="http://www.w3.org/1999/XSL/Format"
+  xmlns:editlink="http://oxygenxml.com/xslt/editlink/" exclude-result-prefixes="xs editlink"
+  version="2.0">
+  
+  <xsl:import href="link.xsl"/>
+  
   <xsl:param name="editlink.remote.ditamap.url"/>
   <xsl:param name="editlink.web.author.url"/>
   <xsl:param name="editlink.local.ditamap.path"/>
   <xsl:param name="editlink.present.only.path.to.topic"/>
   <xsl:param name="editlink.local.ditaval.path"/>
- 
+  <xsl:param name="editlink.ditamap.edit.url"/>
+  <xsl:param name="editlink.additional.query.parameters"/>
+  
+  <!-- Template to add edit link to the map -->
+  <xsl:template name="add-map-edit-link">
+    <fo:basic-link xsl:use-attribute-sets="fo-link-attrs">
+      <xsl:attribute name="external-destination">
+        <xsl:value-of select="concat($editlink.web.author.url, 'app/oxygen.html?url=', encode-for-uri($editlink.remote.ditamap.url))"/>
+      </xsl:attribute>
+      Edit online
+    </fo:basic-link>
+  </xsl:template>
+  
   <xsl:template match="*" mode="processTopicTitle">
     <xsl:choose>
-      <xsl:when test="string-length($editlink.remote.ditamap.url) > 0
-        or $editlink.present.only.path.to.topic = 'true'">
-        <xsl:variable name="level" as="xs:integer">
-          <xsl:apply-templates select="." mode="get-topic-level"/>
+      <xsl:when test="editlink:should-add-edit-link() and @xtrf">
+        <xsl:variable name="original">
+          <xsl:next-match/>
         </xsl:variable>
-        <xsl:variable name="attrSet1">
-          <xsl:apply-templates select="." mode="createTopicAttrsName">
-            <xsl:with-param name="theCounter" select="$level"/>
-          </xsl:apply-templates>
-        </xsl:variable>
-        <xsl:variable name="attrSet2" select="concat($attrSet1, '__content')"/>
-        <fo:block>
-          <xsl:call-template name="commonattributes"/>
-          <xsl:call-template name="processAttrSetReflection">
-            <xsl:with-param name="attrSet" select="$attrSet1"/>
-            <xsl:with-param name="path" select="'../../cfg/fo/attrs/commons-attr.xsl'"/>
-          </xsl:call-template>
-          <fo:block>
-            <xsl:call-template name="processAttrSetReflection">
-              <xsl:with-param name="attrSet" select="$attrSet2"/>
-              <xsl:with-param name="path" select="'../../cfg/fo/attrs/commons-attr.xsl'"/>
-            </xsl:call-template>
-            
-            <fo:table>
-              <fo:table-body>   
-                <fo:table-row>
-                  <fo:table-cell>
-                    <fo:block>
-                      <!-- This content was already here before. I just wrapped it in a table. -->
-                      <xsl:if test="$level = 1">
-                        <fo:marker marker-class-name="current-header">
-                          <xsl:apply-templates select="." mode="getTitle"/>
-                        </fo:marker>
-                      </xsl:if>
-                      <xsl:if test="$level = 2">
-                        <fo:marker marker-class-name="current-h2">
-                          <xsl:apply-templates select="." mode="getTitle"/>
-                        </fo:marker>
-                      </xsl:if>
-                      <fo:inline id="{parent::node()/@id}"/>
-                      <fo:inline>
-                        <xsl:attribute name="id">
-                          <xsl:call-template name="generate-toc-id">
-                            <xsl:with-param name="element" select=".."/>
-                          </xsl:call-template>
-                        </xsl:attribute>
-                      </fo:inline>
-                      <xsl:call-template name="pullPrologIndexTerms"/>
-                      <xsl:apply-templates select="." mode="getTitle"/>
-                      <!-- End of existing content -->
-                    </fo:block>
-                  </fo:table-cell>
-                  <fo:table-cell width="80pt">
-                    <fo:block start-indent="0px" width="80pt">
-                      <xsl:if test="@xtrf">
-                        <xsl:choose>
-                          <xsl:when test="$editlink.present.only.path.to.topic = 'true'">
-                            <fo:inline text-align="right"
-                              white-space="nowrap"
-                              color="navy"
-                              font-size="8pt"
-                              font-weight="normal"
-                              width="80pt"
-                              font-style="normal">
-                              <xsl:value-of select="editlink:makeRelative(editlink:toUrl($editlink.local.ditamap.path), @xtrf)"/>
-                            </fo:inline>
-                          </xsl:when>
-                          <xsl:otherwise>
-                            <fo:basic-link
-                              text-align="right"
-                              white-space="nowrap"
-                              text-decoration="underline" 
-                              color="navy"
-                              font-size="8pt"
-                              font-weight="normal"
-                              width="80pt"
-                              font-style="normal">
-                              <xsl:attribute name="external-destination">
-                                <xsl:value-of select="editlink:compute($editlink.remote.ditamap.url, $editlink.local.ditamap.path, @xtrf, $editlink.web.author.url, $editlink.local.ditaval.path)"/>
-                              </xsl:attribute>
-                              Edit online
-                            </fo:basic-link>
-                          </xsl:otherwise>
-                        </xsl:choose>
-                      </xsl:if>
-                    </fo:block>
-                  </fo:table-cell>
-                </fo:table-row>
-              </fo:table-body>
-            </fo:table>
-          </fo:block>
-        </fo:block>
+        
+        <xsl:variable name="nodeToProcess" 
+          select="($original//fo:block[starts-with(@id, '_OPENTOPIC_TOC_PROCESSING')] | 
+          $original//fo:block[./fo:wrapper[starts-with(@id, '_OPENTOPIC_TOC_PROCESSING')]])[1]"/>
+        
+        <!-- Process the generated FO to add the 'Edit Link' action -->
+        <xsl:apply-templates select="$original" mode="add-edit-link">
+          <xsl:with-param name="xtrf" select="@xtrf" tunnel="yes"/>
+          <xsl:with-param name="nodeToProcess" select="$nodeToProcess" tunnel="yes"/>
+        </xsl:apply-templates>
       </xsl:when>
       <xsl:otherwise>
         <xsl:next-match/>
@@ -115,22 +47,32 @@
     </xsl:choose>
   </xsl:template>
   
-  <!--  Bookmap Chapter processing  -->
-  <xsl:template match="*[contains(@class, ' bookmap/chapter ')]" mode="generatePageSequences">
+  <xsl:function name="editlink:should-add-edit-link" as="xs:boolean">
+    <xsl:sequence 
+      select="(string-length($editlink.remote.ditamap.url) > 0
+      or string-length($editlink.ditamap.edit.url) > 0
+      or $editlink.present.only.path.to.topic = 'true')"/>
+  </xsl:function>
+  
+  <!-- Chapters -->
+  <xsl:template match="*" mode="processTopicChapterInsideFlow">
+    <xsl:call-template name="add-edit-link-following-sibling"/>
+  </xsl:template>
+  
+  <!-- Topics in front matter -->
+  <xsl:template match="*" mode="processTopicFrontMatterInsideFlow">
     <xsl:choose>
-      <xsl:when test="string-length($editlink.remote.ditamap.url) > 0 
-        or $editlink.present.only.path.to.topic = 'true'">
-        <xsl:variable name="referencedTopic" select="key('topic-id', @id)" as="element()*"/>
-        <xsl:choose>
-          <xsl:when test="empty($referencedTopic)">
-            <xsl:apply-templates select="*[contains(@class,' map/topicref ')]" mode="generatePageSequences"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:for-each select="$referencedTopic">
-              <xsl:call-template name="processTopicChapterForEditLinks"/>
-            </xsl:for-each>
-          </xsl:otherwise>
-        </xsl:choose>
+      <xsl:when test="editlink:should-add-edit-link() and @xtrf">
+        <xsl:variable name="original">
+          <xsl:next-match/>
+        </xsl:variable>
+        <xsl:variable name="nodeToProcess" 
+          select="($original//fo:block[starts-with(@id, '_OPENTOPIC_TOC_PROCESSING')])[1]"/>
+        <!-- Process the generated FO to add the 'Edit Link' action -->
+        <xsl:apply-templates select="$original" mode="add-edit-link">
+          <xsl:with-param name="xtrf" select="@xtrf" tunnel="yes"/>
+          <xsl:with-param name="nodeToProcess" select="$nodeToProcess" tunnel="yes"/>
+        </xsl:apply-templates>
       </xsl:when>
       <xsl:otherwise>
         <xsl:next-match/>
@@ -138,107 +80,92 @@
     </xsl:choose>
   </xsl:template>
   
-  <xsl:template name="processTopicChapterForEditLinks">
+  <!-- Preface -->
+  <xsl:template match="*" mode="processTopicPrefaceInsideFlow">
+    <xsl:call-template name="add-edit-link-following-sibling"/>
+  </xsl:template>
+  
+  <!-- Appendix Chapter -->
+  <xsl:template match="*" mode="processTopicAppendixInsideFlow">
+    <xsl:call-template name="add-edit-link-following-sibling"/>
+  </xsl:template>
+  
+  <!-- Process the $original node and add an edit link near 
+    the following sibling of the element with 'opentopic' id. -->
+  <xsl:template name="add-edit-link-following-sibling">
     <xsl:choose>
-      <xsl:when test="string-length($editlink.remote.ditamap.url) > 0
-        or $editlink.present.only.path.to.topic = 'true'">
-        <fo:page-sequence master-reference="body-sequence" xsl:use-attribute-sets="page-sequence.body">
-          <xsl:call-template name="startPageNumbering"/>
-          <xsl:call-template name="insertBodyStaticContents"/>
-          <fo:flow flow-name="xsl-region-body">
-            <fo:block xsl:use-attribute-sets="topic">
-              <xsl:call-template name="commonattributes"/>
-              <xsl:variable name="level" as="xs:integer">
-                <xsl:apply-templates select="." mode="get-topic-level"/>
-              </xsl:variable>
-              <xsl:if test="$level eq 1">
-                <fo:marker marker-class-name="current-topic-number">
-                  <xsl:variable name="topicref" select="key('map-id', ancestor-or-self::*[contains(@class, ' topic/topic ')][1]/@id)"/>
-                  <xsl:for-each select="$topicref">
-                    <xsl:apply-templates select="." mode="topicTitleNumber"/>
-                  </xsl:for-each>
-                </fo:marker>
-                <xsl:apply-templates select="." mode="insertTopicHeaderMarker"/>
-              </xsl:if>
-              
-              <xsl:apply-templates select="*[contains(@class,' topic/prolog ')]"/>
-              
-              <xsl:call-template name="insertChapterFirstpageStaticContent">
-                <xsl:with-param name="type" select="'chapter'"/>
-              </xsl:call-template>
-              
-              <fo:block xsl:use-attribute-sets="topic.title">
-                <fo:table>
-                  <fo:table-body>
-                    <fo:table-row>
-                      <fo:table-cell>
-                        <fo:block>
-                          <xsl:call-template name="pullPrologIndexTerms"/>
-                          <xsl:for-each select="*[contains(@class,' topic/title ')]">
-                            <xsl:apply-templates select="." mode="getTitle"/>
-                          </xsl:for-each>
-                        </fo:block>
-                      </fo:table-cell>
-                      <fo:table-cell width="80pt">
-                        <fo:block start-indent="0px" width="80pt">
-                          <xsl:if test="@xtrf">
-                            <xsl:choose>
-                              <xsl:when test="$editlink.present.only.path.to.topic = 'true'">
-                                <fo:inline text-align="right"
-                                  white-space="nowrap"
-                                  color="navy"
-                                  font-size="8pt"
-                                  font-weight="normal"
-                                  width="80pt"
-                                  font-style="normal">
-                                  <xsl:value-of select="editlink:makeRelative(editlink:toUrl($editlink.local.ditamap.path), @xtrf)"/>
-                                </fo:inline>
-                              </xsl:when>
-                              <xsl:otherwise>
-                                <fo:basic-link
-                                  text-align="right"
-                                  white-space="nowrap"
-                                  text-decoration="underline" 
-                                  color="navy"
-                                  font-size="8pt"
-                                  font-weight="normal"
-                                  width="80pt"
-                                  font-style="normal">
-                                  <xsl:attribute name="external-destination">
-                                    <xsl:value-of select="editlink:compute($editlink.remote.ditamap.url, $editlink.local.ditamap.path, @xtrf, $editlink.web.author.url, $editlink.local.ditaval.path)"/>
-                                  </xsl:attribute>
-                                  Edit online
-                                </fo:basic-link>  
-                              </xsl:otherwise>
-                            </xsl:choose>
-                          </xsl:if>
-                        </fo:block>
-                      </fo:table-cell>
-                    </fo:table-row>
-                  </fo:table-body>
-                </fo:table>
-              </fo:block>
-              
-              <xsl:choose>
-                <xsl:when test="$chapterLayout='BASIC'">
-                  <xsl:apply-templates select="*[not(contains(@class, ' topic/topic ') or contains(@class, ' topic/title ') or
-                    contains(@class, ' topic/prolog '))]"/>
-                  <!--xsl:apply-templates select="." mode="buildRelationships"/-->
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:apply-templates select="." mode="createMiniToc"/>
-                </xsl:otherwise>
-              </xsl:choose>
-              
-              <xsl:apply-templates select="*[contains(@class,' topic/topic ')]"/>
-              <xsl:call-template name="pullPrologIndexTerms.end-range"/>
-            </fo:block>
-          </fo:flow>
-        </fo:page-sequence>
+      <xsl:when test="editlink:should-add-edit-link() and @xtrf">
+        <xsl:variable name="original">
+          <xsl:next-match/>
+        </xsl:variable>
+        <xsl:variable name="nodeToProcess" 
+          select="($original//fo:block[starts-with(@id, '_OPENTOPIC_TOC_PROCESSING')]/following-sibling::fo:block)[1]"/>
+        <!-- Process the generated FO to add the 'Edit Link' action -->
+        <xsl:apply-templates select="$original" mode="add-edit-link">
+          <xsl:with-param name="xtrf" select="@xtrf" tunnel="yes"/>
+          <xsl:with-param name="nodeToProcess" select="$nodeToProcess" tunnel="yes"/>
+        </xsl:apply-templates>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:next-match/>
+      </xsl:otherwise>
+    </xsl:choose>    
+  </xsl:template>
+  
+  <!-- Add a fo:basic-link element associated with the 'Edit Link' action -->
+  <xsl:template match="*" mode="add-edit-link" priority="5">
+    <xsl:param name="xtrf" tunnel="yes"/>
+    <xsl:param name="nodeToProcess" tunnel="yes"/>
+    
+    <xsl:choose>
+      <xsl:when test="generate-id($nodeToProcess) = generate-id(.)">
+        <xsl:copy>
+          <xsl:apply-templates select="@*" mode="#current"/>
+          <fo:table>
+            <fo:table-body>
+              <fo:table-row>
+                <fo:table-cell>
+                  <fo:block>
+                    <xsl:apply-templates select="node()" mode="#current"/>
+                  </fo:block>
+                </fo:table-cell>
+                <fo:table-cell width="80pt">
+                  <fo:block>
+                    <xsl:choose>
+                      <xsl:when test="$editlink.present.only.path.to.topic = 'true'">
+                        <fo:inline text-align="right" white-space="nowrap" color="navy" font-size="8pt"
+                          font-weight="normal" width="80pt" font-style="normal">
+                          <xsl:value-of
+                            select="editlink:makeRelative(editlink:toUrl($editlink.local.ditamap.path), $xtrf)"
+                          />
+                        </fo:inline>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <fo:basic-link xsl:use-attribute-sets="fo-link-attrs">
+                          <xsl:attribute name="external-destination">
+                            <xsl:value-of
+                              select="editlink:compute($editlink.remote.ditamap.url, $editlink.local.ditamap.path, $xtrf, $editlink.web.author.url, $editlink.local.ditaval.path, $editlink.ditamap.edit.url, $editlink.additional.query.parameters)"/>
+                          </xsl:attribute> Edit online </fo:basic-link>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </fo:block>
+                </fo:table-cell>
+              </fo:table-row>
+            </fo:table-body>
+          </fo:table>
+        </xsl:copy>    
       </xsl:when>
       <xsl:otherwise>
         <xsl:next-match/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  
+  <!-- Copy template for the add-edit-link mode -->
+  <xsl:template match="node() | @*" mode="add-edit-link">
+    <xsl:copy>
+      <xsl:apply-templates select="node() | @*" mode="#current"/>
+    </xsl:copy>
+  </xsl:template>
+  
 </xsl:stylesheet>
