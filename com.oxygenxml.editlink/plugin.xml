@@ -2,7 +2,7 @@
 <plugin id="com.oxygenxml.editlink">
   <feature extension="package.support.name" value="Oxygen XML Editor Support"/>
   <feature extension="package.support.email" value="support@oxygenxml.com"/>
-  <feature extension="package.version" value="23.1"/>
+  <feature extension="package.version" value="27.0"/>
 
   <!-- HTML5 extension points -->   
   <feature extension="dita.xsl.html5" value="xhtml.xsl" type="file"/>
@@ -17,9 +17,10 @@
       <param name="editlink.web.author.url" desc="(deprecated. Use editlink.ditamap.edit.url instead) The URL of the Web Author installation" type="string">
       <val desc="oXygen XML Web Author Demo" default="true">https://www.oxygenxml.com/oxygen-xml-web-author/</val>
     </param>
-    <param name="editlink.ditamap.edit.url" desc="The URL of DITA Map opened in Web Auhtor or Content Fusion.
-        For Web Author simply open the root DITA Map in Web Author and copy from browser's address bar the whole URL. The value may look like 'https://www.oxygenxml.com/oxygen-xml-web-author/app/oxygen.html?url=webdav-https%3A%2F%2Fwww.oxygenxml.com%2Foxygen-xml-web-author%2Fplugins-dispatcher%2Fwebdav-server%2Fdita%2Fflowers%2Fflowers.ditamap&amp;author=Anonymous'.
-        For Content Fusion create a task with all DITA files including the Map, open the task in browser, go to the root DITA Map file and copy from browser's address bar the whole URL. The value may look like 'https://fusion.oxygenxml.com/tasks/asdalongidasd/edit/flowers.ditamap'." type="string">
+    <param name="editlink.ditamap.edit.url" desc="The DITA Map URL from the browser's address bar of the online content you want to edit.
+      For Web Author it's the root DITA Map URL, e.g. 'https://www.oxygenxml.com/oxygen-xml-web-author/app/oxygen.html?url=samples%3A%2F%2Fsamples%2Fdita%2Fflowers%2Fflowers.ditamap'.
+      For Content Fusion either it's the root DITA Map URL when you open a task, e.g. 'https://fusion.oxygenxml.com/tasks/e789amdoqu8fl7dn7avo1n2o13vtgbceomj3pege7kip2bge/edit/flowers.ditamap', or
+      it's the root DITA Map URL when you open a project and start editing it, e.g. 'https://fusion.oxygenxml.com/workspace/i6ghvo8im0obhku3g8ci46gitgs70q5edf3toaaaar8ui5r3/main/publication/files/flowers.ditamap'." type="string">
     </param>
     <param name="editlink.additional.query.parameters" 
       desc="Additional query parameters to be appended at each edit URL. E.g: '&amp;showDitaMapView=true'" type="string">
@@ -39,9 +40,10 @@
     <param name="editlink.web.author.url" desc="(deprecated. Use editlink.ditamap.edit.url instead) The URL of the Web Author installation" type="string">
       <val desc="oXygen XML Web Author Demo" default="true">https://www.oxygenxml.com/oxygen-xml-web-author/</val>
     </param>
-    <param name="editlink.ditamap.edit.url" desc="The URL of DITA Map opened in Web Auhtor or Content Fusion.
-        For Web Author simply open the root DITA Map in Web Author and copy from browser's address bar the whole URL. The value may look like 'https://www.oxygenxml.com/oxygen-xml-web-author/app/oxygen.html?url=webdav-https%3A%2F%2Fwww.oxygenxml.com%2Foxygen-xml-web-author%2Fplugins-dispatcher%2Fwebdav-server%2Fdita%2Fflowers%2Fflowers.ditamap&amp;author=Anonymous'.
-        For Content Fusion create a task with all DITA files including the Map, open the task in browser, go to the root DITA Map file and copy from browser's address bar the whole URL. The value may look like 'https://fusion.oxygenxml.com/tasks/asdalongidasd/edit/flowers.ditamap'." type="string">
+    <param name="editlink.ditamap.edit.url" desc="The DITA Map URL from the browser's address bar of the online content you want to edit.
+      For Web Author it's the root DITA Map URL, e.g. 'https://www.oxygenxml.com/oxygen-xml-web-author/app/oxygen.html?url=samples%3A%2F%2Fsamples%2Fdita%2Fflowers%2Fflowers.ditamap'.
+      For Content Fusion either it's the root DITA Map URL when you open a task, e.g. 'https://fusion.oxygenxml.com/tasks/e789amdoqu8fl7dn7avo1n2o13vtgbceomj3pege7kip2bge/edit/flowers.ditamap', or
+      it's the root DITA Map URL when you open a project and start editing it, e.g. 'https://fusion.oxygenxml.com/workspace/i6ghvo8im0obhku3g8ci46gitgs70q5edf3toaaaar8ui5r3/main/publication/files/flowers.ditamap'." type="string">
     </param>
     <param name="editlink.additional.query.parameters" 
       desc="Additional query parameters to be appended at each edit URL. E.g: '&amp;showDitaMapView=true'" type="string">
@@ -65,9 +67,10 @@
     <param name="editlink.additional.query.parameters" 
       desc="Additional query parameters to be appended at each edit URL. E.g: '&amp;showDitaMapView=true'" type="string">
     </param>
-  <param name="editlink.ditamap.edit.url" desc="The URL of DITA Map opened in Web Auhtor or Content Fusion.
-        For Web Author simply open the root DITA Map in Web Author and copy from browser's address bar the whole URL. The value may look like 'https://www.oxygenxml.com/oxygen-xml-web-author/app/oxygen.html?url=webdav-https%3A%2F%2Fwww.oxygenxml.com%2Foxygen-xml-web-author%2Fplugins-dispatcher%2Fwebdav-server%2Fdita%2Fflowers%2Fflowers.ditamap&amp;author=Anonymous'.
-        For Content Fusion create a task with all DITA files including the Map, open the task in browser, go to the root DITA Map file and copy from browser's address bar the whole URL. The value may look like 'https://fusion.oxygenxml.com/tasks/asdalongidasd/edit/flowers.ditamap'." type="string">
+    <param name="editlink.ditamap.edit.url" desc="The DITA Map URL from the browser's address bar of the online content you want to edit.
+      For Web Author it's the root DITA Map URL, e.g. 'https://www.oxygenxml.com/oxygen-xml-web-author/app/oxygen.html?url=samples%3A%2F%2Fsamples%2Fdita%2Fflowers%2Fflowers.ditamap'.
+      For Content Fusion either it's the root DITA Map URL when you open a task, e.g. 'https://fusion.oxygenxml.com/tasks/e789amdoqu8fl7dn7avo1n2o13vtgbceomj3pege7kip2bge/edit/flowers.ditamap', or
+      it's the root DITA Map URL when you open a project and start editing it, e.g. 'https://fusion.oxygenxml.com/workspace/i6ghvo8im0obhku3g8ci46gitgs70q5edf3toaaaar8ui5r3/main/publication/files/flowers.ditamap'." type="string">
     </param>
   </transtype>
   

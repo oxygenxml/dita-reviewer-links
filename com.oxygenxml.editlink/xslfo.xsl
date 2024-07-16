@@ -144,7 +144,14 @@
                         <fo:basic-link xsl:use-attribute-sets="fo-link-attrs">
                           <xsl:attribute name="external-destination">
                             <xsl:value-of
-                              select="editlink:compute($editlink.remote.ditamap.url, $editlink.local.ditamap.path, $xtrf, $editlink.web.author.url, $editlink.local.ditaval.path, $editlink.ditamap.edit.url, $editlink.additional.query.parameters)"/>
+                              select="editlink:compute(
+                              $editlink.remote.ditamap.url, 
+                              $editlink.local.ditamap.path, 
+                              $xtrf, 
+                              $editlink.web.author.url, 
+                              $editlink.local.ditaval.path, 
+                              $editlink.ditamap.edit.url, 
+                              $editlink.additional.query.parameters)"/>
                           </xsl:attribute> Edit online </fo:basic-link>
                       </xsl:otherwise>
                     </xsl:choose>

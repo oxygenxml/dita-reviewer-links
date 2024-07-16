@@ -1,5 +1,5 @@
-[class*="topic/title"][data-editlink]:after {
-  content: "Edit Online";
+*[class *= "topic/title"][data-editlink]:after {
+  content: "Edit online";
   margin-left: 10px;
   color: navy;
   font-size: 12px;
